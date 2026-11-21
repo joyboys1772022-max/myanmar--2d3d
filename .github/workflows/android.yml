@@ -1,0 +1,33 @@
+
+name: Build Myanmar 2D3D APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract project
+        run: |
+          unzip -o Myanmar_2D3D_Phone_Build_Kit.zip -d extracted
+          cp -r extracted/* .
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Build APK
+        run: gradle assembleDebug
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Myanmar-2D3D-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
